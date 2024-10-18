@@ -1,12 +1,11 @@
 import React, { useContext, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import {useParams } from 'react-router-dom'
 import { ShoppingCartContext } from '../../context';
 
 function ProductDetails() {
     const {id} = useParams();
-    const navigate = useNavigate();
 
-    const {productDetails, setProductDetails, loading,  setLoading, handleAddToCart} = useContext(ShoppingCartContext);
+    const {productDetails, setProductDetails, loading,  setLoading, handleAddToCart, cartItems} = useContext(ShoppingCartContext);
 
     async function fetchProductDetails() {
         const apiResponse = await fetch(`https://dummyjson.com/products/${id}`)
@@ -65,8 +64,11 @@ function ProductDetails() {
                     </div>
                     <div>
                         <button
+                        disabled={
+                            productDetails ?
+                            cartItems.findIndex(item=> item.id === productDetails.id) > -1 : false}
                         onClick={()=> handleAddToCart(productDetails)}
-                         className='mt-5 min-w-[200px] px-4 py-3 border border-[#333] bg-transparent text-sm font-semibold rounded'>Add to Cart</button>
+                         className='disabled:opacity-65 mt-5 min-w-[200px] px-4 py-3 border border-[#333] bg-transparent text-sm font-semibold rounded'>Add to Cart</button>
                     </div>
                 </div>
             </div>

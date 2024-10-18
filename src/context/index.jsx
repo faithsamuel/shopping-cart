@@ -46,6 +46,11 @@ function ShoppingCartProvider({children}) {
             })
         } else {
             console.log('No');
+            cpyExistingCartItems[findIndexOfCurrentItem] = {
+                ...cpyExistingCartItems[findIndexOfCurrentItem],
+                quantity : cpyExistingCartItems[findIndexOfCurrentItem].quantity + 1,
+                totalPrice : (cpyExistingCartItems[findIndexOfCurrentItem]. quantity + 1) * cpyExistingCartItems[findIndexOfCurrentItem].price
+            }
         }
 
         console.log(cpyExistingCartItems, 'cpyExistingCartItems')
@@ -53,6 +58,24 @@ function ShoppingCartProvider({children}) {
         localStorage.setItem('cartItems', JSON.stringify(cpyExistingCartItems));
         navigate('/cart');
 
+    }
+
+    function handleRemoveFromCart(getProductDetails, isFullyRemoveFromCart) {
+        let cpyExistingCartItems = [...cartItems];
+        const findIndexOfCurrentCartItem = cpyExistingCartItems.findIndex(item=> item.id === getProductDetails.id)
+
+        if(isFullyRemoveFromCart){
+            cpyExistingCartItems.splice(findIndexOfCurrentCartItem, 1)
+        } else{
+            cpyExistingCartItems[findIndexOfCurrentCartItem] = {
+                ...cpyExistingCartItems[findIndexOfCurrentCartItem],
+                quantity : cpyExistingCartItems[findIndexOfCurrentCartItem].quantity -1,
+                totalPrice : (cpyExistingCartItems[findIndexOfCurrentCartItem].quantity - 1) * cpyExistingCartItems[findIndexOfCurrentCartItem].price,
+            };
+        }
+
+        localStorage.setItem('cartItems', JSON.stringify(cpyExistingCartItems));
+        setCartItems(cpyExistingCartItems);
     }
 
     useEffect(()=>{
@@ -64,7 +87,7 @@ function ShoppingCartProvider({children}) {
     console.log(cartItems);
 
     return (
-     <ShoppingCartContext.Provider value={{listOfProducts, loading, setLoading,productDetails,setProductDetails, handleAddToCart, cartItems}}>
+     <ShoppingCartContext.Provider value={{listOfProducts, loading, setLoading,productDetails,setProductDetails, handleAddToCart, cartItems, handleRemoveFromCart}}>
         {children}
     </ShoppingCartContext.Provider>
     )

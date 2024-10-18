@@ -23,11 +23,11 @@ function CartList() {
             <h3 className='text-xl font-extrabold text-gray-950 border-b border-gay-300 pb-2'>Order Summary</h3>
             <ul className='text-gray-700 mt-4 space-y-2'>
                 <p className='flex flex-wrap gap-4 text-sm font-bold'>
-                    Total <span></span>
+                    Total <span>$ {cartItems.reduce((acc,curr)=> acc + curr.totalPrice,0).toFixed(2)}</span>
                 </p>
             </ul>
             <div className='mt-5 flex gap-2 '>
-                <button className='text-sm px-4 py-3 bg-black text-white font-extrabold'>Checkout</button>
+                <button disabled={cartItems.length === 0} className='disabled:opacity-60 text-sm px-4 py-3 bg-black text-white font-extrabold'>Checkout</button>
                 <button className='text-sm px-4 py-3 bg-black text-white font-extrabold' onClick={()=>navigate('/products')}>Continue Shopping</button>
             </div>
         </div>
